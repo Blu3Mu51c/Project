@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Print Jobs{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/printjobs/printjob_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="list-header">
+    <h2>🖨️ 3D Print Jobs</h2>
+    <a href="{% url 'printjob-create' %}" class="btn add-btn">+ Add Print Job</a>
+</section>
+
+<section class="printjob-grid">
+    {% for job in object_list %}
+      <div class="printjob-card status-{{ job.status|lower }}">
+        <div class="card-header">
+          <h3>
+            <a href="{% url 'printjob-detail' job.pk %}">{{ job.name }}</a>
+          </h3>
+          <span class="status-badge status-{{ job.status|lower }}">
+            {{ job.get_status_display }}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <p><strong>Material:</strong> {{ job.material }}</p>
+          <p><strong>Weight:</strong> {{ job.weight_grams }} g</p>
+          <p><strong>Est. Time:</strong> {{ job.estimated_time }}</p>
+          <p><strong>Submitted by:</strong> {{ job.user.username }}</p>
+        </div>
+
+        <div class="card-footer">
+          <a href="{% url 'printjob-detail' job.pk %}" class="btn view-btn">View Details</a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="empty-msg">⚠️ No print jobs have been submitted yet.</p>
+    {% endfor %}
+</section>
+{% endblock %}

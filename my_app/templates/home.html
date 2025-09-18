@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<!-- Authenticated dashboard -->
+<section class="page-header">
+    <h1>3D Printing Service Dashboard</h1>
+    <p>Manage your 3D printing jobs, materials, and printers</p>
+</section>
+
+<section class="stats-row">
+    <div class="stat-card">
+        <h3>Print Jobs</h3>
+        <div class="stat-body">
+            <h4>{{ print_jobs_count }}</h4>
+            <p>Total jobs in system</p>
+            <a href="{% url 'printjob-list' %}" class="btn">View All</a>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <h3>Materials</h3>
+        <div class="stat-body">
+            <h4>{{ materials_count }}</h4>
+            <p>Available materials</p>
+            <a href="{% url 'material-list' %}" class="btn">View All</a>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <h3>Printers</h3>
+        <div class="stat-body">
+            <h4>{{ printers_count }}</h4>
+            <p>Available printers</p>
+            <a href="{% url 'printer-list' %}" class="btn">View All</a>
+        </div>
+    </div>
+
+</section>
+
+{% else %}
+
+<!-- Guest login view -->
+
+<section class="login-section">
+  <form action="{% url 'home' %}" method="post" class="login">
+      <h1>Login</h1>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="btn submit">Login</button>
+  </form>
+</section>
+
+{% endif %}
+
+{% endblock %}
